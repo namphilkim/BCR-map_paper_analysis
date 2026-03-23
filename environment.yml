@@ -1,0 +1,24 @@
+# Optional Conda environment. Primary install path: pip install -r requirements.txt && pip install -e .
+# Repository: https://github.com/namphilkim/BCR-map_paper_analysis
+# MIL checkpoints: download from Zenodo (see README.md), not from git.
+name: bcr-map
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.9,<3.13
+  - pip
+  - pip:
+      - typer>=0.9.0
+      - torch>=1.13,<3
+      - pytorch-lightning>=2.0,<3
+      - transformers>=4.30
+      - torchmetrics>=1.0
+      - torchvision
+      - pandas
+      - numpy
+      - Pillow
+      - h5py
+      - tqdm
+      - PyYAML

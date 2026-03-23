@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bcr-map"
+version = "1.0.0"
+description = "Image-based MIL training for BCR-map (BCR-map: Integrative Visualization of B-cell Receptor Repertoires)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "BCR-map authors" }]
+keywords = [
+  "B-cell receptor",
+  "immune repertoire",
+  "BCR-map",
+  "BCR-map image",
+  "multiple-instance learning",
+  "vision transformer",
+  "pytorch-lightning",
+  "computational immunology",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+  "typer>=0.9.0",
+  "torch>=1.13,<3",
+  "pytorch-lightning>=2.0,<3",
+  "transformers>=4.30",
+  "torchmetrics>=1.0",
+  "torchvision",
+  "pandas",
+  "numpy",
+  "Pillow",
+  "h5py",
+  "tqdm",
+  "PyYAML",
+]
+
+[project.urls]
+Homepage = "https://github.com/namphilkim/BCR-map_paper_analysis"
+Repository = "https://github.com/namphilkim/BCR-map_paper_analysis"
+Documentation = "https://github.com/namphilkim/BCR-map_paper_analysis#readme"
+"Bug Tracker" = "https://github.com/namphilkim/BCR-map_paper_analysis/issues"
+# After Zenodo deposit of MIL checkpoints, uncomment:
+# Model-weights = "https://doi.org/10.5281/zenodo.XXXXXXXX"
+
+[project.scripts]
+bcr-map = "bcr_map.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bcr_map", "utils"]
+
+[tool.setuptools]
+py-modules = ["main", "extract_vit_patch_embeddings"]

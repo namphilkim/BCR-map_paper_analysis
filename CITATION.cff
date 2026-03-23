@@ -1,0 +1,37 @@
+# Citation File Format — https://citation-file-format.github.io/
+# Repository: https://github.com/namphilkim/BCR-map_paper_analysis
+# Add DOI, journal, volume, pages, and full author list when the manuscript is published.
+cff-version: 1.2.0
+title: "BCR-map: Integrative Visualization of B-cell Receptor Repertoires"
+message: "If you use BCR-map, please cite the associated article and this software repository."
+type: software
+authors:
+  - name: "BCR-map authors"
+repository-code: "https://github.com/namphilkim/BCR-map_paper_analysis"
+license: MIT
+# Uncomment and set when the Zenodo deposit is published (model checkpoints, ~GB scale):
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXXXX"
+#     description: "PyTorch MIL checkpoints (Zenodo dataset record)"
+abstract: |
+  The B-cell receptor (BCR) repertoire encodes cumulative immune history shaped by antigen-driven responses. However, most BCR repertoire analyses rely on aggregated summary metrics that obscure how individual clonotypes collectively organize immune responses. Here, we present BCR-map, an integrative visualization framework that spatially organizes clonotypes to preserve global repertoire structure while retaining clonotype-level resolution and enabling simultaneous interpretation of multiple repertoire features. Using BCR-map, we identify disease-associated repertoire signatures across COVID-19, autoimmune diseases, and Alzheimer's disease in 111 individuals, track longitudinal immune responses following vaccination, and enable robust multi-disease classification using image-based deep learning. These results establish BCR-map as an interpretable framework for system-level immune-repertoire analysis and facilitate discovery and monitoring of immune states across diseases and over time.
+keywords:
+  - "B-cell receptor"
+  - "immune repertoire"
+  - "BCR-map image"
+  - "visualization"
+  - "computational immunology"
+  - "multiple-instance learning"
+  - "Vision Transformer"
+  - "PyTorch Lightning"
+version: 1.0.0
+date-released: "2026-03-23"
+preferred-citation:
+  type: article
+  title: "BCR-map: Integrative Visualization of B-cell Receptor Repertoires"
+  authors:
+    - name: "BCR-map authors"
+  year: 2025
+  # doi: "10.xxxx/xxxxx"
+  # journal: "…"

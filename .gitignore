@@ -1,0 +1,84 @@
+# =============================================================================
+# Local / machine noise (always ignored)
+# =============================================================================
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.so
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+.venv/
+venv/
+env/
+
+.ipynb_checkpoints/
+
+*.egg-info/
+build/
+dist/
+
+.DS_Store
+Thumbs.db
+
+wandb/
+
+# Logs: only track paper runs used for figure reproduction (CSV metrics under each experiment).
+# Other experiments stay local; notebooks should use logs/lightning_logs/In-house/ and .../Mal-ID/.
+logs/*
+!logs/lightning_logs/
+logs/lightning_logs/*
+!logs/lightning_logs/In-house/
+!logs/lightning_logs/In-house/**
+!logs/lightning_logs/Mal-ID/
+!logs/lightning_logs/Mal-ID/**
+# Only ignore lightning_logs at repo root (not logs/lightning_logs/…)
+/lightning_logs/
+
+run_data/*
+
+analysis_results/
+plots/
+temp_ig_results/
+temp_ig_results_all/
+
+.idea/
+.vscode/
+
+# =============================================================================
+# Distribution: what Git may track (everything else stays on disk but is hidden
+# from status unless you `git add -f`). Adjust the whitelist below if needed.
+# =============================================================================
+
+# --- checkpoints: PyTorch weights live on Zenodo, not in git (see checkpoints/README.md) ---
+checkpoints/*
+!checkpoints/README.md
+
+# --- configs: ignore subpackages; keep only mil_training.yaml at configs/ root ---
+configs/full/
+configs/linear/
+configs/lora/
+configs/sweeps/
+
+# --- scripts: only the MIL helpers (add run_mil_single_run.sh if you symlink it here) ---
+scripts/*
+!scripts/train_mil_single_run.sh
+!scripts/extract_embeddings_user_images.sh
+!scripts/run_mil_single_run.sh
+
+# --- notebooks / analysis: not part of model distribution ---
+notebooks/
+
+# --- Root: ignore tooling and experiments not in the MIL distribution list ---
+/checkpoints_*.txt
+/data_inspector.py
+/extract_circular_masks.py
+/extract_features*.sh
+/integrated_gradients*.py
+/plot_results.py
+
+# Other one-off scripts at repo root (covers comparative IG, plot drivers, etc.)
+/run_*.sh
+/run_*.py
