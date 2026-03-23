@@ -1,66 +1,47 @@
-# Usage protocol
+# Usage
 
-This document supplements the main **[README.md](README.md)** in the **[BCR-map_paper_analysis](https://github.com/namphilkim/BCR-map_paper_analysis)** repository. It focuses on the **image-based MIL** training and embedding pipeline (*BCR-map: Integrative Visualization of B-cell Receptor Repertoires*). **Pretrained `.ckpt` files are obtained from Zenodo**, not from `git clone`. Figure notebooks live in the same repository (see README table).
+MIL on ViT patch embeddings in `.h5`. Checkpoints: Zenodo, not `git clone`.
 
-**Scope:** Inputs are **BCR-map images** (the paper’s 2D repertoire visualizations). MIL training operates on **precomputed** ViT patch embeddings (`.h5`) derived from those images. Offline embedding generation uses **`bcr-map extract`**. Training uses **`bcr-map train`** (or `python main.py`) with **`configs/mil_training.yaml`** by default (HiPT aggregator).
-
----
-
-## 1. Installation
+## Install
 
 ```bash
 git clone https://github.com/namphilkim/BCR-map_paper_analysis.git
 cd BCR-map_paper_analysis
 pip install -r requirements.txt
-pip install -e .   # provides the `bcr-map` console script
+pip install -e .
 ```
 
-Then download model weights from **Zenodo** (see §6) into `checkpoints/` before running evaluations that load saved weights.
+Unpack Zenodo weights under `checkpoints/` before loading `.ckpt`.
 
----
+## CLI
 
-## 2. Command-line interface
+| Command | |
+|---------|---|
+| `bcr-map train …` | LightningCLI — `bcr-map train -- --help` |
+| `bcr-map extract …` | ViT → `.h5` — `bcr-map extract -- --help` |
 
-| Command | Purpose |
-|---------|---------|
-| `bcr-map train …` | MIL training via LightningCLI. Full help: `bcr-map train -- --help` |
-| `bcr-map extract …` | ViT patch features from each BCR-map image → `.h5` beside the source file. Help: `bcr-map extract -- --help` |
+## Files
 
----
+| File | |
+|------|---|
+| `bcr_map/cli.py` | CLI |
+| `bcr_map/train.py` | Training |
+| `main.py` | `bcr-map train` |
+| `configs/mil_training.yaml` | Defaults |
+| `extract_vit_patch_embeddings.py` | Extraction driver |
+| `utils/mil_model.py` | Model |
+| `utils/mil_data.py` | Data |
+| `utils/loss.py` | Loss |
+| `scripts/train_mil_single_run.sh` | Env-based train |
+| `scripts/extract_embeddings_user_images.sh` | Env-based extract |
 
-## 3. Source layout (software)
+## Embeddings
 
-| File | Role |
-|------|------|
-| `bcr_map/cli.py` | Typer CLI (`train` / `extract`). |
-| `bcr_map/train.py` | MIL training implementation. |
-| `main.py` | Delegates to `bcr_map.train` (equivalent to `bcr-map train`). |
-| `configs/mil_training.yaml` | Default hyperparameters; override via CLI. |
-| `extract_vit_patch_embeddings.py` | Argparse driver for extraction (invoked by `bcr-map extract`). |
-| `utils/mil_model.py` | Classifier and aggregation heads. |
-| `utils/mil_data.py` | Precomputed `.h5` embeddings and fold CSV loading. |
-| `utils/loss.py` | Loss for the MIL model. |
-| `scripts/train_mil_single_run.sh` | One k-fold job via environment variables; runs `python -m bcr_map.cli train` from the repository root. |
-| `scripts/extract_embeddings_user_images.sh` | Embeddings for an arbitrary image tree; wraps `python -m bcr_map.cli extract`. |
+1. BCR-map images under one root.  
+2. `bcr-map extract --data_dir /path/to/images`  
+3. Fold CSV: columns `fold`, `class`, `image_path` (relative to dataset root). See `utils/mil_data.py`.
 
----
-
-## 4. End-to-end pipeline (user data)
-
-### 4.1 Embedding generation
-
-1. Place **BCR-map images** (PNG/JPEG/TIFF as exported from your BCR-map pipeline) under a single directory tree (recursive walk).
-2. Run (from repository root, or after `pip install -e .`):
-
-```bash
-export GPU=0   # optional; passed to CUDA_VISIBLE_DEVICES in shell wrappers
-bcr-map extract --data_dir /path/to/your/images
-# or: bash scripts/extract_embeddings_user_images.sh /path/to/your/images
-```
-
-3. Build a **fold CSV** with columns `fold`, `class`, `image_path` (paths relative to the dataset root). See `utils/mil_data.py` for `.h5` resolution next to each image.
-
-### 4.2 Training
+## Training (env)
 
 ```bash
 export MIL_DATAPATH=/path/to/root_used_in_csv
@@ -71,57 +52,35 @@ export MIL_K_FOLDS=5
 bash scripts/train_mil_single_run.sh
 ```
 
----
+## Environment variables (`train_mil_single_run.sh`)
 
-## 5. Environment variables (`train_mil_single_run.sh`)
+| Variable | Required | Default / note |
+|----------|----------|----------------|
+| `MIL_DATAPATH` | yes | Dataset root |
+| `MIL_FOLDS_CSV` | yes | Folds CSV |
+| `MIL_EXPERIMENT_ID` | yes | Subdir under `checkpoints/` and `logs` |
+| `MIL_NUM_CLASSES` | no | `6` |
+| `MIL_K_FOLDS` | no | `3` |
+| `MIL_MAX_EPOCHS` | no | `100` |
+| `MIL_BATCH_SIZE` | no | `2` |
+| `MIL_MAX_PATCHES` | no | `10000` |
+| `MIL_GPU` | no | `0` |
+| `MIL_AGGREGATION` | no | `hipt` |
+| `MIL_BACKBONE` | no | `vit-b16-224-in21k` |
+| `MIL_CONFIG` | no | `$REPO_ROOT/configs/mil_training.yaml` |
+| `BCR_MAP_ROOT` | no | Repo root |
+| `BCR_MAP_STABLE_VERSION` | no | `1` |
+| `BCR_MAP_CSV_LOGGER_ONLY` | no | `1` (CSV; `0` for W&B) |
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MIL_DATAPATH` | yes | Dataset root (paths in CSV are relative to this). |
-| `MIL_FOLDS_CSV` | yes | Fold assignment CSV. |
-| `MIL_EXPERIMENT_ID` | yes | Subdirectory under `checkpoints/` and `logs`. |
-| `MIL_NUM_CLASSES` | no | Default `6`. |
-| `MIL_K_FOLDS` | no | Default `3`. |
-| `MIL_MAX_EPOCHS` | no | Default `100`. |
-| `MIL_BATCH_SIZE` | no | Default `2`. |
-| `MIL_MAX_PATCHES` | no | Default `10000`. |
-| `MIL_GPU` | no | Default `0`. |
-| `MIL_AGGREGATION` | no | Default `hipt`. |
-| `MIL_BACKBONE` | no | Default `vit-b16-224-in21k`. |
-| `MIL_CONFIG` | no | Default `$REPO_ROOT/configs/mil_training.yaml`. |
-| `BCR_MAP_ROOT` | no | Repository root (default: parent of `scripts/`). |
-| `BCR_MAP_STABLE_VERSION` | no | Default `1` (stable `--version` paths). |
-| `BCR_MAP_CSV_LOGGER_ONLY` | no | Default `1` (CSV only; `0` for Weights & Biases). |
+## Zenodo weights
 
----
+1. Download archive from Zenodo (DOI in main README when set).  
+2. Extract so `checkpoints/In-house/...`, `checkpoints/Mal-ID/...` match training paths.  
+`checkpoints/README.md`.
 
-## 6. Zenodo model weights and local layout
+## Example env (paper-style paths)
 
-**Checkpoints (`*.ckpt`)** are **not** in Git. After you publish a Zenodo deposit, add its **DOI** to the main README and cite it in publications.
-
-1. Open the Zenodo record (placeholder DOI: `10.5281/zenodo.XXXXXXXX`).
-2. Download the archive (`.zip` / `.tar` as you uploaded).
-3. Extract into the repository root so relative paths match training, e.g.:
-
-| Expected path (after extract) |
-|-------------------------------|
-| `checkpoints/In-house/...` |
-| `checkpoints/Mal-ID/...` |
-
-See [`checkpoints/README.md`](checkpoints/README.md).
-
-**Logs** (CSVs for downstream figure reproduction — may be tracked in git for paper figures):
-
-| Directory |
-|-----------|
-| `logs/lightning_logs/In-house/` |
-| `logs/lightning_logs/Mal-ID/` |
-
----
-
-## 7. Example commands (paper-style naming)
-
-**In-house**
+In-house:
 
 ```bash
 export MIL_DATAPATH="${BCRMAP_DATA_ROOT}/In-house_maps_naive_vj_fixed/sampling_100000/none"
@@ -132,7 +91,7 @@ export MIL_K_FOLDS=3
 bash scripts/train_mil_single_run.sh
 ```
 
-**Mal-ID**
+Mal-ID:
 
 ```bash
 export MIL_DATAPATH="${BCRMAP_DATA_ROOT}/Mal-ID_maps_naive_vj_fixed/sampling_5000/none"
@@ -143,14 +102,10 @@ export MIL_K_FOLDS=5
 bash scripts/train_mil_single_run.sh
 ```
 
----
+## Notebooks
 
-## 8. Figure notebooks (same repository)
+`BCR-map_figure_*.ipynb`, `MyBasics.py`, `BCR-map_intermediate_files/` at repo root.
 
-Figure reproduction notebooks (`BCR-map_figure_*.ipynb`), `MyBasics.py`, and `BCR-map_intermediate_files/` are part of **[BCR-map_paper_analysis](https://github.com/namphilkim/BCR-map_paper_analysis)** alongside the MIL code in this tree; **USAGE.md** documents only the training and embedding workflow.
+## Reproducibility
 
----
-
-## 9. Dependency note
-
-`requirements.txt` and `pyproject.toml` specify compatible ranges. For reproducibility across machines, export a **fully pinned** environment after validation (`pip freeze > requirements-lock.txt`) and archive it with the paper supplement.
+Pin deps: `pip freeze > requirements-lock.txt` after a validated run.

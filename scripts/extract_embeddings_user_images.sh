@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
-#
-# Build ViT patch embedding files (.h5) for BCR-map images (paper visualization exports).
-# Walks IMAGE_ROOT recursively; for each image, writes <basename>.h5 beside the image.
-#
-# Usage:
-#   bash scripts/extract_embeddings_user_images.sh /path/to/your/images
-#   # or
-#   export IMAGE_ROOT=/path/to/your/images
-#   bash scripts/extract_embeddings_user_images.sh
-#
-# After this, prepare a fold CSV and point MIL_DATAPATH at the common root that contains
-# those image paths (see USAGE.md).
-#
-# -----------------------------------------------------------------------------
-
+# ViT patch .h5 per image. Args: IMAGE_ROOT or $1. See USAGE.md for fold CSV.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

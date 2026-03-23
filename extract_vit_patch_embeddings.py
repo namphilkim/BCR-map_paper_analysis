@@ -1,4 +1,4 @@
-"""Offline ViT patch embedding extraction for BCR-map images (HDF5 output)."""
+"""ViT patch features → HDF5 per image."""
 
 import os
 import h5py
@@ -212,11 +212,9 @@ def process_dataset(data_dir: str, model_name: str = "vit-b16-224-in21k",
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Extract ViT patch features from BCR-map images (directory of RGB exports)."
-    )
+    parser = argparse.ArgumentParser(description="ViT patch features → HDF5 per image.")
     parser.add_argument("--data_dir", type=str, required=True,
-                       help="Directory containing BCR-map image files to process")
+                       help="Image directory (recursive)")
     parser.add_argument("--model_name", type=str, default="vit-b16-224-in21k",
                        choices=list(MODEL_DICT.keys()),
                        help="ViT model to use for feature extraction")

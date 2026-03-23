@@ -1,4 +1,4 @@
-"""MIL training entry point: LightningCLI, k-fold loop, checkpoint and log layout."""
+"""MIL training (LightningCLI, k-fold)."""
 
 import logging
 import os
@@ -125,7 +125,7 @@ def cli_main() -> None:
     torch.backends.cudnn.allow_tf32 = True
 
     _inject_default_config_argv()
-    logger.info("MIL training (default config: %s; override with --config)", _DEFAULT_MIL_CONFIG)
+    logger.info("config: %s", _DEFAULT_MIL_CONFIG)
 
     base_cli = MyLightningCLI(
         MILClassificationModel,

@@ -1,4 +1,4 @@
-"""MIL data module: HDF5 patch embeddings, fold CSVs, and PyTorch Lightning ``MILDataModule``."""
+"""MIL data: HDF5 embeddings, fold CSV, MILDataModule."""
 
 import os
 import pandas as pd

@@ -1,10 +1,5 @@
-# Checkpoints directory
+# checkpoints/
 
-PyTorch **`.ckpt` weights are not stored in this Git repository**. They are archived separately on **Zenodo** (see the main [README.md](../README.md) for the DOI and download instructions).
+`.ckpt` files are not in git. Download from Zenodo (see repository `README.md`).
 
-After you download and extract the Zenodo archive, this folder should mirror the layout used in the paper, for example:
-
-- `checkpoints/In-house/...`
-- `checkpoints/Mal-ID/...`
-
-Training and evaluation scripts resolve paths relative to the repository root, so keep that structure when unpacking.
+Unpack so paths match training, e.g. `checkpoints/In-house/`, `checkpoints/Mal-ID/`, relative to repo root.

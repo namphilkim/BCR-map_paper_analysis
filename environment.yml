@@ -1,6 +1,5 @@
-# Optional Conda environment. Primary install path: pip install -r requirements.txt && pip install -e .
-# Repository: https://github.com/namphilkim/BCR-map_paper_analysis
-# MIL checkpoints: download from Zenodo (see README.md), not from git.
+# pip install -r requirements.txt && pip install -e .  (primary)
+# https://github.com/namphilkim/BCR-map_paper_analysis — checkpoints from Zenodo, not git
 name: bcr-map
 channels:
   - pytorch

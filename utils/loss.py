@@ -1,5 +1,3 @@
-"""Loss functions for MIL training."""
-
 import torch
 import torch.nn.functional as F
 

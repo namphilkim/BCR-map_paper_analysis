@@ -1,4 +1,4 @@
-"""MIL classifier and aggregation heads (HiPT, attention, transformer) on ViT patch embeddings."""
+"""MIL model and aggregators on patch embeddings."""
 
 import torch
 import torch.nn as nn

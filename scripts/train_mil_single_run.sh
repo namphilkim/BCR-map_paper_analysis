@@ -1,23 +1,12 @@
 #!/usr/bin/env bash
-#
-# Train one MIL model (ViT embeddings + HiPT aggregation), k-fold cross-validation.
-# Edit the variables in the "User settings" block below, or export them before running.
-#
-# Data layout (MIL_DATAPATH):
-#   CSV column image_path is relative to this root. Each BCR-map image should have a matching
-#   .h5 file of ViT patch embeddings beside it (see extract_embeddings_user_images.sh).
-#
-# -----------------------------------------------------------------------------
-
+# K-fold MIL train (ViT .h5 + HiPT). CSV image_path relative to MIL_DATAPATH; .h5 beside each image.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 REPO_ROOT="${BCR_MAP_ROOT:-$REPO_ROOT}"
 
-# =============================================================================
-# User settings (override with environment variables)
-# =============================================================================
+# --- env overrides ---
 
 # Root folder for this run: class subdirectories or paths as expected by your folds CSV.
 : "${MIL_DATAPATH:?Set MIL_DATAPATH to the dataset root (images + .h5 embeddings).}"
@@ -42,10 +31,6 @@ CONFIG_YAML="${MIL_CONFIG:-${REPO_ROOT}/configs/mil_training.yaml}"
 # Reproducible checkpoint paths; CSV-only logs (no W&B account).
 export BCR_MAP_STABLE_VERSION="${BCR_MAP_STABLE_VERSION:-1}"
 export BCR_MAP_CSV_LOGGER_ONLY="${BCR_MAP_CSV_LOGGER_ONLY:-1}"
-
-# =============================================================================
-# Run
-# =============================================================================
 
 echo "Repository:  ${REPO_ROOT}"
 echo "Datapath:    ${MIL_DATAPATH}"

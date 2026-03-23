@@ -1,6 +1,4 @@
-# PyPI dependencies for BCR-map (see pyproject.toml for metadata). For a frozen supplement,
-# run: pip freeze > requirements-lock.txt after validating on your target hardware.
-# Example stack: torch 1.13.x, pytorch-lightning 2.0.x, transformers 4.44.x
+# See pyproject.toml. Optional: pip freeze > requirements-lock.txt
 typer>=0.9.0
 torch>=1.13,<3
 pytorch-lightning>=2.0,<3

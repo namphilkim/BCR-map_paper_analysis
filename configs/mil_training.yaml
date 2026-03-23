@@ -1,6 +1,4 @@
-# Default MIL training configuration (HiPT + ViT-B/16). Override paths and hyperparameters via CLI.
-# See README.md and USAGE.md for reproduction and environment variables.
-
+# Default MIL config (HiPT ViT-B/16). Override via CLI.
 data:
   # Ephemeral per-run copies of symlinks to .h5 embeddings (see MILDataModule)
   root: "./run_data/"
